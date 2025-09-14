@@ -4,5 +4,6 @@ def soma(a: int, b: int) -> int:
 
 
 if __name__ == "__main__":
-    # Saída simples para demonstração
+    # simples demonstração
+    # demonstração simples
     print(soma(2, 3))
