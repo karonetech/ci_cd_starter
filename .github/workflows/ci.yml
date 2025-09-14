@@ -1,13 +1,8 @@
+# .github/workflows/ci.yml
 name: CI
-
 on:
-  pull_request:
-    branches: [ master, main ]
-  push:
-    branches: [ master, main ]
-
-permissions:
-  contents: read
+  pull_request: { branches: [ master, main ] }
+  push: { branches: [ master, main ] }
 
 jobs:
   lint:
@@ -15,9 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
+        with: { python-version: "3.10", cache: "pip" }
       - name: Instalar deps (inclui flake8)
         run: |
           python -m pip install --upgrade pip
@@ -31,12 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
+        with: { python-version: "3.10", cache: "pip" }
       - name: Instalar deps (pytest)
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt pytest
-      - name: Rodar testes
-        run: pytest -q
+      - name: Rodar testes (como módulo)
+        run: python -m pytest -q --maxfail=1 --disable-warnings
