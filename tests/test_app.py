@@ -5,3 +5,6 @@ def test_soma_basico():
 
 def test_soma_zero():
     assert soma(0, 0) == 0
+
+def test_soma_negativos():
+    assert soma(-2, -3) == -5
