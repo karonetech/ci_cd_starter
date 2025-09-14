@@ -1,27 +1,42 @@
-name: CI Pipeline
+name: CI
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
-    branches: ["main"]
+    branches: [ master, main ]
+  push:
+    branches: [ master, main ]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Configurar Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-
-      - name: Instalar dependências
+          cache: "pip"
+      - name: Instalar deps (inclui flake8)
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt flake8
+      - name: Rodar flake8
+        run: flake8 .
 
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Instalar deps (pytest)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
       - name: Rodar testes
         run: pytest -q

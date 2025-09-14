@@ -1,0 +1,53 @@
+name: CD
+
+on:
+  pull_request:         # Quando abrir uma PR → deploy de staging
+    branches: [ master, main ]
+  push:                 # Quando fizer push no master/main → deploy de produção
+    branches: [ master, main ]
+
+permissions:
+  contents: write   # necessário para criar release no GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar artefato
+        run: |
+          mkdir -p dist
+          tar -czf dist/ci_cd_starter.tar.gz app.py README.md requirements.txt tests || true
+      - name: Upload artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: dist/ci_cd_starter.tar.gz
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: dist
+      - name: Simular deploy de staging
+        run: echo "✅ Deploy de STAGING realizado na PR #${{ github.event.number }}"
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: dist
+      - name: Criar Release no GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Release v${{ github.run_number }}
+          files: dist/ci_cd_starter.tar.gz
