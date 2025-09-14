@@ -8,3 +8,6 @@ def test_soma_zero():
 
 def test_soma_negativos():
     assert soma(-2, -3) == -5
+
+def test_soma_misto():
+    assert soma(-5, 10) == 5
