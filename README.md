@@ -15,7 +15,7 @@ pytest -q
 
 ## Como funciona o CI
 - Em todo **push** e **pull request** para `main`, o workflow executa:
-  1. Checkout do código
+  1. Checkout do código em python
   2. Setup Python 3.10
   3. Instala dependências
   4. Roda `pytest`
