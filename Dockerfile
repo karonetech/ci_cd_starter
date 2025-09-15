@@ -7,4 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Comando padrão (roda app.py)
 CMD ["python", "app.py"]
