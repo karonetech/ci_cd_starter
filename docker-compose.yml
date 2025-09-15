@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+    image: ci_cd_starter:latest
+    command: python app.py
+
+  tests:
+    build:
+      context: .
+    image: ci_cd_starter:latest
+    # antes estava: command: pytest -v
+    command: python -m pytest -v
